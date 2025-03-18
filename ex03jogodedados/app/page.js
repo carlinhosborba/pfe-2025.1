@@ -14,6 +14,15 @@ function NumeroRodada({ rodada }) {
   );
 }
 
+function Placar({ vitoriasJogador1, vitoriasJogador2 }) {
+  return (
+    <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.5rem', fontWeight: 'bold', position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', width: '100%' }}>
+      <h2>Placar</h2>
+      <p>Jogador 1: {vitoriasJogador1} | Jogador 2: {vitoriasJogador2}</p>
+    </div>
+  );
+}
+
 function MyButton({ onClick, disabled }) {
   return (
     <button onClick={onClick} disabled={disabled} style={{ border: "2px solid red", borderRadius: "5px", padding: "10px", cursor: "pointer" }}>
@@ -22,11 +31,7 @@ function MyButton({ onClick, disabled }) {
   );
 }
 
-function gerarNumAleat1() {
-  return Math.floor(Math.random() * 6) + 1;
-}
-
-function gerarNumAleat2() {
+function gerarNumAleat() {
   return Math.floor(Math.random() * 6) + 1;
 }
 
@@ -48,25 +53,26 @@ export default function Home() {
 
   const handleClick1 = () => {
     if (!girar1) {
-      setRandom1(gerarNumAleat1());
+      setRandom1(gerarNumAleat());
       setGirar1(true);
     }
   };
 
   const handleClick2 = () => {
     if (!girar2) {
-      setRandom2(gerarNumAleat2());
+      setRandom2(gerarNumAleat());
       setGirar2(true);
     }
   };
 
   const handleEndRound = () => {
+    if (random1 > random2) {
+      setVitoriasJogador1(vitoriasJogador1 + 1);
+    } else if (random2 > random1) {
+      setVitoriasJogador2(vitoriasJogador2 + 1);
+    }
+
     if (rodada < 5) {
-      if (random1 > random2) {
-        setVitoriasJogador1(vitoriasJogador1 + 1);
-      } else if (random2 > random1) {
-        setVitoriasJogador2(vitoriasJogador2 + 1);
-      }
       setRodada(prevRodada => prevRodada + 1);
       setGirar1(false);
       setGirar2(false);
@@ -93,19 +99,21 @@ export default function Home() {
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ position: 'relative', minHeight: '100vh', paddingBottom: '60px' }}>
       <Tittle />
-      <NumeroRodada rodada={rodada} style={{ color: 'white' }} />
-      <div className="jogo">
-        <div className="jogador1">
-          <h1>JOGADOR 1</h1>
-          <GirarDado src={`/dado${random1}.jpg`} alt={`Dado ${random1}`} />
-          <MyButton onClick={handleClick1} disabled={girar1} />
-        </div>
-        <div className="jogador2">
-          <h1>JOGADOR 2</h1>
-          <GirarDado src={`/dado${random2}.jpg`} alt={`Dado ${random2}`} />
-          <MyButton onClick={handleClick2} disabled={girar2} />
+      <NumeroRodada rodada={rodada} />
+      <div className="jogo" style={{ textAlign: 'center' }}>
+        <div className="jogadores" style={{ display: 'flex', justifyContent: 'center', gap: '50px' }}>
+          <div className="jogador1">
+            <h1>JOGADOR 1</h1>
+            <GirarDado src={`/dado${random1}.jpg`} alt={`Dado ${random1}`} />
+            <MyButton onClick={handleClick1} disabled={girar1} />
+          </div>
+          <div className="jogador2">
+            <h1>JOGADOR 2</h1>
+            <GirarDado src={`/dado${random2}.jpg`} alt={`Dado ${random2}`} />
+            <MyButton onClick={handleClick2} disabled={girar2} />
+          </div>
         </div>
         <button
           onClick={handleEndRound}
@@ -117,24 +125,25 @@ export default function Home() {
             marginTop: "20px"
           }}
           disabled={!(girar1 && girar2)}>
-          Avançe para a próxima rodada !
+          Avançar para a próxima rodada!
         </button>
         <button 
-        onClick={handleReset} 
-        style={{ 
-          padding: "10px", 
-          marginTop: "20px",
-          borderRadius: "5px", 
-          border: "2px solid blue", 
-          cursor: "pointer" }}>
+          onClick={handleReset} 
+          style={{ 
+            padding: "10px", 
+            marginTop: "20px",
+            borderRadius: "5px", 
+            border: "2px solid blue", 
+            cursor: "pointer" }}>
           Jogar Novamente
         </button>
         {vencedor && (
-          <div style={{ marginTop: "30px", fontSize: "1.5rem"}}>
+          <div style={{ marginTop: "30px", fontSize: "1.5rem" }}>
             <h3>O vencedor é: {vencedor}</h3>            
           </div>
         )}
       </div>
+      <Placar vitoriasJogador1={vitoriasJogador1} vitoriasJogador2={vitoriasJogador2} />
     </div>
   );
 }
