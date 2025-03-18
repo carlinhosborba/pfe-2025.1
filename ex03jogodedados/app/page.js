@@ -25,13 +25,17 @@ function Placar({ vitoriasJogador1, vitoriasJogador2 }) {
 
 function MyButton({ onClick, disabled }) {
   return (
-    <button onClick={onClick} disabled={disabled} style={{ border: "2px solid red", borderRadius: "5px", padding: "10px", cursor: "pointer" }}>
+    <button className='buttonGirar' onClick={onClick} disabled={disabled} style={{ border: "2px solid red", borderRadius: "5px", padding: "10px", cursor: "pointer" }}>
       GIRAR O DADO
     </button>
   );
 }
 
-function gerarNumAleat() {
+function gerarNumAleat1() {
+  return Math.floor(Math.random() * 6) + 1;
+}
+
+function gerarNumAleat2() {
   return Math.floor(Math.random() * 6) + 1;
 }
 
@@ -53,26 +57,26 @@ export default function Home() {
 
   const handleClick1 = () => {
     if (!girar1) {
-      setRandom1(gerarNumAleat());
+      setRandom1(gerarNumAleat1());
       setGirar1(true);
     }
   };
 
   const handleClick2 = () => {
     if (!girar2) {
-      setRandom2(gerarNumAleat());
+      setRandom2(gerarNumAleat2());
       setGirar2(true);
     }
   };
 
   const handleEndRound = () => {
-    if (random1 > random2) {
-      setVitoriasJogador1(vitoriasJogador1 + 1);
-    } else if (random2 > random1) {
-      setVitoriasJogador2(vitoriasJogador2 + 1);
-    }
-
+    console.log("handleEndRound");
     if (rodada < 5) {
+      if (random1 > random2) {
+        setVitoriasJogador1(vitoriasJogador1 + 1);
+      } else if (random2 > random1) {
+        setVitoriasJogador2(vitoriasJogador2 + 1);
+      }
       setRodada(prevRodada => prevRodada + 1);
       setGirar1(false);
       setGirar2(false);
@@ -112,7 +116,7 @@ export default function Home() {
           <div className="jogador2">
             <h1>JOGADOR 2</h1>
             <GirarDado src={`/dado${random2}.jpg`} alt={`Dado ${random2}`} />
-            <MyButton onClick={handleClick2} disabled={girar2} />
+            <MyButton onClick={handleClick2} className={girar1 && girar2 ? "enabled" : "disabled"}></MyButton>
           </div>
         </div>
         <button
@@ -124,7 +128,8 @@ export default function Home() {
             cursor: "pointer",
             marginTop: "20px"
           }}
-          disabled={!(girar1 && girar2)}>
+          disabled={!(girar1 && girar2)}
+          className={girar1 && girar2 ? "enabled" : "disabled"}>
           Avançar para a próxima rodada!
         </button>
         <button 
