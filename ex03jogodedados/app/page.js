@@ -16,7 +16,7 @@ function NumeroRodada({ rodada }) {
 
 function Placar({ vitoriasJogador1, vitoriasJogador2 }) {
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.5rem', fontWeight: 'bold', position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', width: '100%' }}>
+    <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.5rem', fontWeight: 'bold' }}>
       <h2>Placar</h2>
       <p>Jogador 1: {vitoriasJogador1} | Jogador 2: {vitoriasJogador2}</p>
     </div>
@@ -70,7 +70,6 @@ export default function Home() {
   };
 
   const handleEndRound = () => {
-    console.log("handleEndRound");
     if (rodada < 5) {
       if (random1 > random2) {
         setVitoriasJogador1(vitoriasJogador1 + 1);
@@ -81,13 +80,7 @@ export default function Home() {
       setGirar1(false);
       setGirar2(false);
     } else {
-      if (vitoriasJogador1 > vitoriasJogador2) {
-        setVencedor('Jogador 1');
-      } else if (vitoriasJogador2 > vitoriasJogador1) {
-        setVencedor('Jogador 2');
-      } else {
-        setVencedor('Empate');
-      }
+      setVencedor(vitoriasJogador1 > vitoriasJogador2 ? 'Jogador 1' : vitoriasJogador2 > vitoriasJogador1 ? 'Jogador 2' : 'Empate');
     }
   };
 
@@ -103,10 +96,10 @@ export default function Home() {
   };
 
   return (
-    <div className="container" style={{ position: 'relative', minHeight: '100vh', paddingBottom: '60px' }}>
+    <div className="container" style={{ textAlign: 'center', minHeight: '100vh' }}>
       <Tittle />
       <NumeroRodada rodada={rodada} />
-      <div className="jogo" style={{ textAlign: 'center' }}>
+      <div className="jogo" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div className="jogadores" style={{ display: 'flex', justifyContent: 'center', gap: '50px' }}>
           <div className="jogador1">
             <h1>JOGADOR 1</h1>
@@ -116,32 +109,17 @@ export default function Home() {
           <div className="jogador2">
             <h1>JOGADOR 2</h1>
             <GirarDado src={`/dado${random2}.jpg`} alt={`Dado ${random2}`} />
-            <MyButton onClick={handleClick2} className={girar1 && girar2 ? "enabled" : "disabled"}></MyButton>
+            <MyButton onClick={handleClick2} disabled={girar2} />
           </div>
         </div>
-        <button
-          onClick={handleEndRound}
-          style={{
-            border: "2px solid green",
-            borderRadius: "5px",
-            padding: "10px",
-            cursor: "pointer",
-            marginTop: "20px"
-          }}
-          disabled={!(girar1 && girar2)}
-          className={girar1 && girar2 ? "enabled" : "disabled"}>
-          Avançar para a próxima rodada!
-        </button>
-        <button 
-          onClick={handleReset} 
-          style={{ 
-            padding: "10px", 
-            marginTop: "20px",
-            borderRadius: "5px", 
-            border: "2px solid blue", 
-            cursor: "pointer" }}>
-          Jogar Novamente
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
+          <button onClick={handleEndRound} style={{ border: "2px solid green", borderRadius: "5px", padding: "10px", cursor: "pointer" }} disabled={!(girar1 && girar2)}>
+            Avançar para a próxima rodada!
+          </button>
+          <button onClick={handleReset} style={{ border: "2px solid blue", borderRadius: "5px", padding: "10px", cursor: "pointer" }}>
+            Jogar Novamente
+          </button>
+        </div>
         {vencedor && (
           <div style={{ marginTop: "30px", fontSize: "1.5rem" }}>
             <h3>O vencedor é: {vencedor}</h3>            
