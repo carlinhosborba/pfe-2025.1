@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 
 export default function ConversorMoeda() {
-  const cotacaoDolar = 5.10;
+  const cotacaoDolar = 5.8419;
 
   const [real, setReal] = useState('');
   const [dolar, setDolar] = useState('');
